@@ -1,0 +1,21 @@
+﻿@using SeriaSetUI.Models
+
+<table style="border:1px solid black;width:80pt ; height: 120pt;">
+@for (var i = 0; i < NumShapes; ++i)
+{
+    <tr>
+        <td align="center">
+            <ShapeComponent Shape="Shape"/>
+        </td>
+    </tr>
+}
+</table>
+
+@code {
+    [Parameter]
+    public IShape Shape { get; set; }
+
+    [Parameter]
+    public uint NumShapes { get; set; }
+
+}
