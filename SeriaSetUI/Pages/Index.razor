@@ -21,10 +21,14 @@
     @foreach (var line in GetAllCardsInfos().Batch(9))
     {
         <tr>
-            @foreach (var (shape, numShapes) in line)
+            @foreach (var (shape, color, lineStyle, numShapes) in line)
             {
                 <td>
-                    <Card NumShapes="numShapes" Shape="shape" />
+                    <Card NumShapes="numShapes" 
+                            Shape="shape" 
+                            Color="color"
+                            LineStyle="lineStyle"
+                          />
                 </td>
             }
         </tr>
@@ -39,16 +43,6 @@ Welcome to your new app.
 
 
 @code {
-    private static IShape[] GetAllShapes()
-    {
-        var allShapes = new IShape[]
-        {
-            new Triangle(),
-            new Rectangle(),
-            new Elipse(),
-        };
-        return allShapes;
-    }
 
     private static IEnumerable<T> GetAllEnumValues<T>() 
         where T : Enum
@@ -56,20 +50,18 @@ Welcome to your new app.
         return Enum.GetValues(typeof(T)).Cast<T>();
     }
 
-    private IEnumerable<(IShape Shape, uint NumShapes)> GetAllCardsInfos()
+    private IEnumerable<(Shape Shape, Color color, LineStyle lineStyle, uint NumShapes)> 
+        GetAllCardsInfos()
     {
         foreach (var color in GetAllEnumValues<Color>())
         {
-            foreach (var borderStyle in GetAllEnumValues<LineStyle>())
+            foreach (var lineStyle in GetAllEnumValues<LineStyle>())
             {
-                foreach (var shape in GetAllShapes())
+                foreach (var shape in GetAllEnumValues<Shape>())
                 {
-                    shape.Color = color;
-                    shape.BorderStyle = borderStyle;
-
                     foreach (var numShapes in Enumerable.Range(1, 3))
                     {
-                        yield return (shape, (uint)numShapes);
+                        yield return (shape, color, lineStyle, (uint)numShapes);
                     }
                 }
             }

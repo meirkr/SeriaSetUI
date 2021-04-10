@@ -10,7 +10,10 @@ namespace SeriaSetUI.Draw
 
     public abstract class DrawingBase : IDrawing
     {
-        public IShape Shape { get; set; }
+        public Shape Shape { get; set; }
+        public Color Color { get; set; }
+        public LineStyle LineStyle { get; set; }
+
         protected Canvas2DContext Context { get; }
 
         protected DrawingBase(Canvas2DContext context)
@@ -47,7 +50,7 @@ namespace SeriaSetUI.Draw
         private async Task ConfigureColor()
         {
             string colorStr;
-            switch (Shape.Color)
+            switch (Color)
             {
                 case Color.Red:
                     colorStr = "Black";
@@ -59,7 +62,7 @@ namespace SeriaSetUI.Draw
                     colorStr = "blue";
                     break;
                 default:
-                    throw new NotSupportedException($"Color: {Shape.Color} is not supported");
+                    throw new NotSupportedException($"Color: {Color} is not supported");
             }
 
             //await this.Context.SetStrokeStyleAsync("black");
@@ -70,7 +73,7 @@ namespace SeriaSetUI.Draw
         private async Task ConfigureStyle()
         {
             float[] dashes;
-            switch (Shape.BorderStyle)
+            switch (LineStyle)
             {
                 case LineStyle.Regular:
                     dashes = Array.Empty<float>();
@@ -82,7 +85,7 @@ namespace SeriaSetUI.Draw
                     dashes = new float[]{ 1, 15 };
                     break;
                 default:
-                    throw new NotSupportedException($"BorderStyle: {Shape.BorderStyle} is not supported");
+                    throw new NotSupportedException($"BorderStyle: {LineStyle} is not supported");
             }
 
             await this.Context.SetLineDashAsync(dashes);

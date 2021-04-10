@@ -6,7 +6,9 @@ namespace SeriaSetUI.Draw
 {
     public interface IDrawing
     {
-        IShape Shape { get; set; }
+        Shape Shape { get; set; }
+        Color Color { get; set; }
+        LineStyle LineStyle { get; set; }
         Task Draw();
     }
 }

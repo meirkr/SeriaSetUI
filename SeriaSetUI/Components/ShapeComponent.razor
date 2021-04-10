@@ -3,7 +3,6 @@
 @using GeometRi
 @using SeriaSetUI.Draw
 @using SeriaSetUI.Models
-@using Triangle = SeriaSetUI.Models.Triangle
 
 <BECanvas Width="80" Height="40" @ref="CanvasReference"></BECanvas>
 
@@ -12,11 +11,12 @@
     private Canvas2DContext _context;
     protected BECanvasComponent CanvasReference;
     [Parameter]
-    public IShape Shape { get; set; }
-    protected void Refresh()
-    {
-        base.StateHasChanged();
-    }
+    public Shape Shape { get; set; }
+    [Parameter]
+    public Color Color { get; set; }
+    [Parameter]
+    public LineStyle LineStyle { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         this._context = await this.CanvasReference.CreateCanvas2DAsync();
@@ -29,24 +29,26 @@
         await drawing.Draw();
     }
 
-    private IDrawing GetDrawing(IShape shape)
+    private IDrawing GetDrawing(Shape shape)
     {
         IDrawing drawing;
         switch (shape)
         {
-            case Rectangle _:
+            case Shape.Rectangle:
                 drawing = new RectDrawing(_context);
                 break;
-            case Triangle _:
+            case Shape.Triangle:
                 drawing = new TriangleDrawing(_context);
                 break;
-            case Elipse _:
+            case Shape.Ellipse:
                 drawing = new ElipseDrawing(_context);
                 break;
             default:
                 throw new NotSupportedException($"Unsupported type: {shape.GetType()}");
         }
         drawing.Shape = shape;
+        drawing.Color = Color;
+        drawing.LineStyle = LineStyle;
 
         return drawing;
     }
