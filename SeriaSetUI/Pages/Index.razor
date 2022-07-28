@@ -27,7 +27,7 @@
                     <Card NumShapes="numShapes" 
                             Shape="shape" 
                             Color="color"
-                            LineStyle="lineStyle"
+                            FillStyle="lineStyle"
                           />
                 </td>
             }
@@ -50,18 +50,18 @@ Welcome to your new app.
         return Enum.GetValues(typeof(T)).Cast<T>();
     }
 
-    private IEnumerable<(Shape Shape, Color color, LineStyle lineStyle, uint NumShapes)> 
+    private IEnumerable<(Shape Shape, Color color, FillStyle lineStyle, uint NumShapes)> 
         GetAllCardsInfos()
     {
         foreach (var color in GetAllEnumValues<Color>())
         {
-            foreach (var lineStyle in GetAllEnumValues<LineStyle>())
+            foreach (var shape in GetAllEnumValues<Shape>())
             {
-                foreach (var shape in GetAllEnumValues<Shape>())
+                foreach (var fillStyle in GetAllEnumValues<FillStyle>())
                 {
                     foreach (var numShapes in Enumerable.Range(1, 3))
                     {
-                        yield return (shape, color, lineStyle, (uint)numShapes);
+                        yield return (shape, color, fillStyle, (uint)numShapes);
                     }
                 }
             }

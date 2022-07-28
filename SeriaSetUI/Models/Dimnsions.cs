@@ -1,10 +1,10 @@
 ﻿namespace SeriaSetUI.Models
 {
-    public enum LineStyle
+    public enum FillStyle
     {
-        Regular,
-        Dash,
-        Dots,
+        Empty,
+        Filled,
+        Pattern,
     } 
 
     public enum Color

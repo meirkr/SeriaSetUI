@@ -1,56 +1,65 @@
-﻿@using Blazor.Extensions
-@using Blazor.Extensions.Canvas.Canvas2D
-@using GeometRi
-@using SeriaSetUI.Draw
-@using SeriaSetUI.Models
+﻿@using SeriaSetUI.Models
+@using System.Diagnostics
 
-<BECanvas Width="80" Height="40" @ref="CanvasReference"></BECanvas>
+@* <BECanvas Width="80" Height="40" @ref="CanvasReference"></BECanvas> *@
 
+<svg viewBox="0 5 90.052 70.075" width="50" height="50">
+    <defs>
+        <pattern id="pattern-1-blue" patternTransform="matrix(0.409232, 0, 0.409232, 0.409232, 33.634451, 34.195278)" xlink:href="#pattern-2-blue"></pattern>
+        <pattern x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 50 50" id="pattern-2-blue">
+            <rect x="0" y="0" width="20" height="100" style="fill: blue;"></rect>
+        </pattern>
+        
+        <pattern id="pattern-1-red" patternTransform="matrix(0.409232, 0, 0.409232, 0.409232, 33.634451, 34.195278)" xlink:href="#pattern-2-red"></pattern>
+        <pattern x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 50 50" id="pattern-2-red">
+            <rect x="0" y="0" width="20" height="100" style="fill: red;"></rect>
+        </pattern>
+        
+        <pattern id="pattern-1-green" patternTransform="matrix(0.409232, 0, 0.409232, 0.409232, 33.634451, 34.195278)" xlink:href="#pattern-2-green"></pattern>
+        <pattern x="0" y="0" width="25" height="25" patternUnits="userSpaceOnUse" viewBox="0 0 50 50" id="pattern-2-green">
+            <rect x="0" y="0" width="20" height="100" style="fill: green;"></rect>
+        </pattern>
+                
+    </defs>
+    
+    @switch (Shape)
+    {
+        case Shape.Rectangle:
+            <rect x="0.921" y="1.482" width="75.657" height="75.657" style="stroke: @Color.ToString(); fill: @Fill;"></rect>
+            break;
+        case Shape.Ellipse:
+            <ellipse style="fill: @Fill; stroke: @Color.ToString();" cx="40.174" cy="41.056" rx="37.829" ry="28.727"></ellipse>
+            break;
+        case Shape.Triangle:
+            <path d="M 44.439 2.976 L 85.965 79.051 L 2.913 79.051 L 44.439 2.976 Z" data-bx-shape="triangle 2.913 2.976 83.052 76.075 0.5 0 1@398f7e43" style="fill: @Fill; stroke: @Color.ToString();"></path>
+            break;
+        default:
+            throw new ArgumentOutOfRangeException();
+    }
+</svg>
 
-@code {
-    private Canvas2DContext _context;
-    protected BECanvasComponent CanvasReference;
+@code 
+{
     [Parameter]
     public Shape Shape { get; set; }
     [Parameter]
     public Color Color { get; set; }
     [Parameter]
-    public LineStyle LineStyle { get; set; }
+    public FillStyle FillType { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    public string Fill => GetFillMode();
+
+    private string GetFillMode()
     {
-        this._context = await this.CanvasReference.CreateCanvas2DAsync();
-
-        await this._context.ClearRectAsync(0, 0, 300, 400);
-
-
-        var drawing = GetDrawing(Shape);
-
-        await drawing.Draw();
-    }
-
-    private IDrawing GetDrawing(Shape shape)
-    {
-        IDrawing drawing;
-        switch (shape)
+        return FillType switch
         {
-            case Shape.Rectangle:
-                drawing = new RectDrawing(_context);
-                break;
-            case Shape.Triangle:
-                drawing = new TriangleDrawing(_context);
-                break;
-            case Shape.Ellipse:
-                drawing = new ElipseDrawing(_context);
-                break;
-            default:
-                throw new NotSupportedException($"Unsupported type: {shape.GetType()}");
-        }
-        drawing.Shape = shape;
-        drawing.Color = Color;
-        drawing.LineStyle = LineStyle;
-
-        return drawing;
+            FillStyle.Filled => Color.ToString().ToLower(),
+            FillStyle.Pattern => $"url(#pattern-1-{Color.ToString().ToLower()})",
+            FillStyle.Empty => "white",
+            _ => throw new ArgumentOutOfRangeException()
+            
+        };
     }
 
 }
